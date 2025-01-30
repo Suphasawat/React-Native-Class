@@ -2,27 +2,44 @@ import React from "react";
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
-const ItemCard = ({ title, price, status, image, onPress }) => {
-  const isPurchased = status === "bought";
+const ItemCard = ({ title, price, status, image, onPress, onChange }) => {
+  const isPurchased = status === "Bought";
 
   return (
-    <View style={[styles.card, isPurchased && styles.purchasedCard]}>
-      <View style={{ flexDirection: "row" }}>
-        <View style={{ flex: 1, opacity: isPurchased ? 0.5 : 1 }}>
+    <View style={[styles.card, { opacity: isPurchased ? 0.5 : 1 }]}>
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View style={{ flex: 1 }}>
           {image && <Image source={{ uri: image }} style={styles.imageStyle} />}
-          <Text style={[styles.text, isPurchased && styles.strikethroughText]}>
+          <Text
+            style={[
+              styles.text,
+              { textDecorationLine: isPurchased ? "line-through" : "none" },
+            ]}
+          >
             {title}
           </Text>
-          <Text style={[styles.text, isPurchased && styles.strikethroughText]}>
+          <Text
+            style={[
+              styles.text,
+              { textDecorationLine: isPurchased ? "line-through" : "none" },
+            ]}
+          >
             {price}
           </Text>
-          <Text style={[styles.text, isPurchased && styles.strikethroughText]}>
-            {status}
-          </Text>
+          <TouchableOpacity onPress={onChange}>
+            <Text
+              style={[
+                styles.text,
+                { textDecorationLine: isPurchased ? "line-through" : "none" },
+              ]}
+            >
+              {status}
+            </Text>
+          </TouchableOpacity>
         </View>
         {onPress && (
           <TouchableOpacity onPress={onPress} style={styles.deleteButton}>
-            <Icon name="delete" size={30} color="white" />
+            <Icon name="delete" size={20} color="white" />
           </TouchableOpacity>
         )}
       </View>
@@ -42,14 +59,8 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
-  purchasedCard: {
-    opacity: 0.6, // ลดความชัดของการ์ด
-  },
   text: {
     fontSize: 16,
-  },
-  strikethroughText: {
-    textDecorationLine: "line-through",
   },
   imageStyle: {
     width: 310,

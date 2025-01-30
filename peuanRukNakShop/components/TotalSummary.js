@@ -1,7 +1,12 @@
 import React from "react";
+import { View } from "react-native";
 
-const TotalSummary = () => {
-  return <div>TotalSummary</div>;
+const TotalSummary = ({items}) => {
+  return (
+    <View>
+      <View></View>
+    </View>
+  );
 };
 
 export default TotalSummary;
