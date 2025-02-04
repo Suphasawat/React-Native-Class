@@ -1,17 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import CustomButton from "../components/CustomButton";
 import { Alert } from "react-native";
 
-const RegisForm = () => {
+const RegisForm = ({ navigation }) => {
   const [Username, setUsername] = useState("");
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
+  const [ConfirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({
     username: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
 
   const handleChange = (field, value) => {
@@ -34,6 +36,8 @@ const RegisForm = () => {
         error = "Invalid email address";
       } else if (field === "password" && value.length < 8) {
         error = "Invalid password format";
+      } else if (field === "confirmPassword" && value !== Password) {
+        error = "Passwords do not match";
       }
     }
     setErrors((prevErrors) => ({ ...prevErrors, [field]: error }));
@@ -44,17 +48,29 @@ const RegisForm = () => {
     const usernameError = validateField("username", Username);
     const emailError = validateField("email", Email);
     const passwordError = validateField("password", Password);
+    const confirmPasswordError = validateField(
+      "confirmPassword",
+      ConfirmPassword
+    );
 
-    if (!usernameError && !emailError && !passwordError) {
+    if (
+      !usernameError &&
+      !emailError &&
+      !passwordError &&
+      !confirmPasswordError
+    ) {
       Alert.alert("Registration result", "successful!");
       setUsername("");
       setEmail("");
       setPassword("");
+      setConfirmPassword("");
       setErrors({
         username: "",
         email: "",
         password: "",
+        confirmPassword: "",
       });
+      navigation.navigate("Card");
     }
   };
 
@@ -67,6 +83,7 @@ const RegisForm = () => {
         placeholder="Username"
         value={Username}
         onChangeText={(value) => handleChange("username", value)}
+        onBlur={() => validateField("username", Username)}
       />
       {errors.username ? (
         <Text style={styles.error}>{errors.username}</Text>
@@ -78,6 +95,7 @@ const RegisForm = () => {
         value={Email}
         onChangeText={setEmail}
         keyboardType="email-address"
+        onBlur={() => validateField("email", Email)}
       />
       {errors.email ? <Text style={styles.error}>{errors.email}</Text> : null}
 
@@ -85,11 +103,24 @@ const RegisForm = () => {
         style={styles.input}
         placeholder="Password"
         value={Password}
-        onChangeText={setPassword}
+        onChangeText={(value) => setPassword(value)}
         secureTextEntry
+        onBlur={() => validateField("password", Password)}
       />
       {errors.password ? (
         <Text style={styles.error}>{errors.password}</Text>
+      ) : null}
+
+      <TextInput
+        style={styles.input}
+        placeholder="confirmPassword"
+        value={ConfirmPassword}
+        onChangeText={(value) => setConfirmPassword(value)}
+        secureTextEntry
+        onBlur={() => validateField("password", Password)}
+      />
+      {errors.confirmPassword ? (
+        <Text style={styles.error}>{errors.confirmPassword}</Text>
       ) : null}
 
       <CustomButton
