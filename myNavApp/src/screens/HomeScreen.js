@@ -37,6 +37,16 @@ const HomeScreen = ({ navigation }) => {
           onPress={() => navigation.navigate("Load")}
           backgroundColor="brown"
         />
+        <CustomButton
+          title="Go To State Screen"
+          onPress={() => navigation.navigate("State")}
+          backgroundColor="orange"
+        />
+        <CustomButton
+          title="Go To State Screen"
+          onPress={() => navigation.navigate("Regis")}
+          backgroundColor="#fdda16"
+        />
       </View>
     </View>
   );

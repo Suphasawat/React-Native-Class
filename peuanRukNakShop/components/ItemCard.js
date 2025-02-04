@@ -15,52 +15,63 @@ const ItemCard = ({
 
   return (
     <View style={[styles.card, { opacity: isPurchased ? 0.5 : 1 }]}>
-      {image && <Image source={{ uri: image }} style={styles.imageStyle} />}
+      {/* {image && <Image source={{ uri: image }} style={styles.imageStyle} />} */}
 
-      <View style={styles.row}>
-        <Text
-          style={[
-            styles.text,
-            styles.flexText,
-            { textDecorationLine: isPurchased ? "line-through" : "none" },
-          ]}
-        >
-          {title}
-        </Text>
-        <Text
-          style={[
-            styles.priceText,
-            { textDecorationLine: isPurchased ? "line-through" : "none" },
-          ]}
-        >
-          ${price}
-        </Text>
-        <Text
-          style={[
-            styles.types,
-            { textDecorationLine: isPurchased ? "line-through" : "none" },
-          ]}
-        >
-          #{types}
-        </Text>
-        <TouchableOpacity onPress={onChange}>
+      <View style={{ flexDirection: "row" }}>
+        <View style={{ flex: 1 }}>
           <Text
             style={[
-              styles.statusText,
-              {
-                color: isPurchased ? "red" : "black",
-                textDecorationLine: isPurchased ? "line-through" : "none",
-              },
+              styles.Titletext,
+              { textDecorationLine: isPurchased ? "line-through" : "none" },
             ]}
           >
-            {status}
+            {title}
           </Text>
-        </TouchableOpacity>
-        {onPress && (
-          <TouchableOpacity onPress={onPress} style={styles.deleteButton}>
-            <Icon name="delete" size={20} color="red" />
+
+          <Text
+            style={[
+              styles.priceText,
+              { textDecorationLine: isPurchased ? "line-through" : "none" },
+            ]}
+          >
+            ${price}
+          </Text>
+          <Text
+            style={[
+              styles.types,
+              { textDecorationLine: isPurchased ? "line-through" : "none" },
+            ]}
+          >
+            #{types}
+          </Text>
+          <TouchableOpacity onPress={onChange}>
+            <Text
+              style={[
+                styles.statusText,
+                {
+                  color: isPurchased ? "red" : "black",
+                  textDecorationLine: isPurchased ? "line-through" : "none",
+                },
+              ]}
+            >
+              {status}
+            </Text>
           </TouchableOpacity>
-        )}
+        </View>
+
+        <View
+          style={{
+            flexDirection: "column",
+            justifyContent: "center",
+            marginRight: 8,
+          }}
+        >
+          {onPress && (
+            <TouchableOpacity onPress={onPress} style={styles.deleteButton}>
+              <Icon name="delete" size={20} color="red" />
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
     </View>
   );
@@ -78,15 +89,16 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
-  row: {
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
   text: {
     fontSize: 16,
     fontWeight: "bold",
   },
-
+  Titletext: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginLeft: 8,
+    marginBottom: 8,
+  },
   priceText: {
     fontWeight: "bold",
     color: "#28a745",
@@ -96,6 +108,7 @@ const styles = StyleSheet.create({
   statusText: {
     fontWeight: "bold",
     fontSize: 16,
+    marginHorizontal: 10,
   },
   imageStyle: {
     width: "100%",
@@ -110,13 +123,10 @@ const styles = StyleSheet.create({
     borderColor: "red",
     borderWidth: 1,
     alignItems: "center",
-    justifyContent: "center",
-    marginTop: 10,
-    marginLeft: 10,
   },
   types: {
     fontWeight: "bold",
-    color: "blue",
+    color: "#155fe1",
     marginHorizontal: 10,
     marginRight: 10,
     fontSize: 16,

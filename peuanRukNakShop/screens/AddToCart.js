@@ -175,6 +175,7 @@ const AddToCart = () => {
 
   return (
     <View style={styles.container}>
+      {/* แสดง Search bar */}
       {!isVisible && (
         <TextInput
           style={styles.input}
@@ -183,6 +184,8 @@ const AddToCart = () => {
           onChangeText={setSearchItem}
         />
       )}
+
+      {/* ปุ่ม add item */}
       <View style={styles.buttonContainer}>
         <TouchableOpacity onPress={toggleAddButton} style={[styles.addButton]}>
           <Text style={styles.buttonText}>
@@ -190,6 +193,7 @@ const AddToCart = () => {
           </Text>
         </TouchableOpacity>
 
+        {/* ปุ่ม add type */}
         {!isVisible && (
           <TouchableOpacity
             onPress={() => {
@@ -202,6 +206,7 @@ const AddToCart = () => {
         )}
       </View>
 
+      {/* แสดง Textinput add type หลังจากกด add type */}
       {isVisibleType && !isVisible && (
         <View>
           <TextInput
@@ -221,6 +226,7 @@ const AddToCart = () => {
         </View>
       )}
 
+      {/* แสดง Textinput add item หลังจากกด add item */}
       {isVisible && (
         <View>
           <Text style={styles.header}>🛒 Add items To the Cart</Text>
@@ -250,7 +256,7 @@ const AddToCart = () => {
                   ]}
                   onPress={() => setSelectedType(item)}
                 >
-                  <Text style={{ color: "black", fontWeight: "bold" }}>
+                  <Text style={styles.typeText}>
                     {item}
                     <TouchableOpacity onPress={() => deleteType(item)}>
                       <Icon
@@ -265,6 +271,8 @@ const AddToCart = () => {
               )}
             />
           </View>
+
+          {/* ปุ่ม add item */}
           <TouchableOpacity onPress={addItem} style={styles.addButton2}>
             <Text style={styles.buttonText}>➕ Add Item</Text>
           </TouchableOpacity>
@@ -340,6 +348,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 10,
+    textAlign: "center",
+  },
+  typeText: {
+    color: "black",
+    fontWeight: "bold",
   },
   typeButton: {
     flex: 1,
@@ -365,7 +378,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   addTypeButton2: {
-    backgroundColor: "#900C3F",
+    backgroundColor: "#907214",
     padding: 12,
     borderRadius: 10,
     alignItems: "center",
@@ -373,7 +386,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   addButton2: {
-    backgroundColor: "#6c23ae",
+    backgroundColor: "#903414",
     padding: 12,
     borderRadius: 10,
     alignItems: "center",

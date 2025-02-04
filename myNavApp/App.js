@@ -10,6 +10,7 @@ import SwipeScreen from "./src/screens/SwipeScreen";
 import CardScreen from "./src/screens/CardScreen";
 import HeroDict from "./src/screens/HeroDict";
 import LoadUsers from "./src/screens/LoadUsers";
+import RegisForm from "./src/screens/RegisForm";
 
 const Stack = createStackNavigator();
 
@@ -30,6 +31,7 @@ const App = () => {
         <Stack.Screen name="Card" component={CardScreen} />
         <Stack.Screen name="Hero" component={HeroDict} />
         <Stack.Screen name="Load" component={LoadUsers} />
+        <Stack.Screen name="Regis" component={RegisForm} />
       </Stack.Navigator>
     </NavigationContainer>
   );
