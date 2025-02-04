@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useReducer } from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
 
 const StateScreen = () => {
-  const [value, setValue] = useState(0);
+  // const [value, setValue] = useState(0);
+  const initialState = () => {
+    
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>{value}</Text>
@@ -10,14 +14,14 @@ const StateScreen = () => {
         <Button
           title="Increase"
           onPress={() => {
-            setValue(value + 1);
+            // setValue(value + 1);
           }}
         />
         <Button
           title="Decrease"
           color="red"
           onPress={() => {
-            setValue(value - 1);
+            // setValue(value - 1);
           }}
         />
         <Button

@@ -365,8 +365,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   addTypeButton2: {
-    flex: 1,
-    backgroundColor: "#0458ca",
+    backgroundColor: "#900C3F",
     padding: 12,
     borderRadius: 10,
     alignItems: "center",
@@ -374,7 +373,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   addButton2: {
-    flex: 1,
     backgroundColor: "#6c23ae",
     padding: 12,
     borderRadius: 10,

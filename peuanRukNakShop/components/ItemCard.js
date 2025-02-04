@@ -79,14 +79,12 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   row: {
-    flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
   },
   text: {
     fontSize: 16,
     fontWeight: "bold",
-    flex: 1,
   },
 
   priceText: {
