@@ -81,11 +81,19 @@ const AddToCart = () => {
   };
 
   const chooseImage = async () => {
-    await launchImageLibrary({ mediaType: "photo" }, (response) => {
-      if (response.assets && response.assets.length > 0) {
-        setItemImage(response.assets[0].uri);
-      }
-    });
+    if (!itemName.trim() || isNaN(itemPrice) || parseFloat(itemPrice) <= 0) {
+      alert("Please enter a valid title and price above 0");
+      return;
+    }
+    try {
+      await launchImageLibrary({ mediaType: "photo" }, (response) => {
+        if (response.assets && response.assets.length > 0) {
+          setItemImage(response.assets[0].uri);
+        }
+      });
+    } catch (error) {
+      console.error("Failed to choose image: ", error);
+    }
   };
 
   const addType = async () => {
@@ -303,11 +311,27 @@ const AddToCart = () => {
               status={item.status}
               types={item.type}
               image={item.image}
-              onUpdateImage={(image) => updateItemImage(item.id, image)}
-              onUpdate={(itemName, itemPrice) =>
-                updateItem(item.id, itemName, itemPrice)
-              }
-              onUpdateType={(types) => updateType(item.id, types)}
+              onUpdateImage={async (image) => {
+                try {
+                  await updateItemImage(item.id, image);
+                } catch (error) {
+                  console.error("Failed to update image: ", error);
+                }
+              }}
+              onUpdate={async (itemName, itemPrice) => {
+                try {
+                  await updateItem(item.id, itemName, itemPrice);
+                } catch (error) {
+                  console.error("Failed to update item: ", error);
+                }
+              }}
+              onUpdateType={async (types) => {
+                try {
+                  await updateType(item.id, types);
+                } catch (error) {
+                  console.error("Failed to update type: ", error);
+                }
+              }}
               onPress={() => deleteItem(item.id)}
             />
           )}
