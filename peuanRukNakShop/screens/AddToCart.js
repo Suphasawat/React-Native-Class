@@ -69,7 +69,7 @@ const AddToCart = () => {
     setItemName("");
     setItemPrice("");
     setStatus("Not yet bought");
-    setItemImage(null); 
+    setItemImage(null);
 
     try {
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedItems));
@@ -283,6 +283,7 @@ const AddToCart = () => {
             status={item.status}
             types={item.type}
             image={item.image}
+            onUpdateImage={(image) => updateItemImage(item.id, image)}
             onUpdate={(itemName, itemPrice) =>
               updateItem(item.id, itemName, itemPrice)
             }

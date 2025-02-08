@@ -8,13 +8,15 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { Image } from "react-native";
+import { launchImageLibrary } from "react-native-image-picker";
 
 const ItemCard = ({
   title: initialTitle,
   price: initialPrice,
   status,
   types: initialType,
-  image,
+  image: initialImage,
+  onUpdateImage,
   onPress,
   onChange,
   onUpdate,
@@ -23,6 +25,7 @@ const ItemCard = ({
   const [title, setTitle] = useState(initialTitle);
   const [price, setPrice] = useState(initialPrice);
   const [types, setType] = useState(initialType);
+  const [image, setImage] = useState(initialImage);
   const [isEditing, setIsEditing] = useState(false);
 
   const isPurchased = status === "Bought";
@@ -35,11 +38,31 @@ const ItemCard = ({
     setIsEditing(false);
     onUpdate(title, price);
     onUpdateType(types);
+    onUpdateImage(image);
   };
 
   return (
     <View style={[styles.card, { opacity: isPurchased ? 0.5 : 1 }]}>
-      {image && (
+      {image && isEditing ? (
+        <>
+          <TouchableOpacity
+            onPress={() =>
+              launchImageLibrary({ mediaType: "photo" }, (response) => {
+                if (response.assets && response.assets.length > 0) {
+                  setImage(response.assets[0].uri);
+                }
+              })
+            }
+          >
+            <Image
+              source={{
+                uri: image,
+              }}
+              style={styles.imageStyle}
+            />
+          </TouchableOpacity>
+        </>
+      ) : (
         <Image
           source={{
             uri: image,
