@@ -6,11 +6,13 @@ import {
   TextInput,
   FlatList,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import ItemCard from "../components/ItemCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import TotalSummary from "../components/TotalSummary";
 import Icon from "react-native-vector-icons/AntDesign";
+import { launchImageLibrary } from "react-native-image-picker";
 
 const STORAGE_KEY = "@card_data";
 const STORAGE_KEY_TYPE = "@type_data";
@@ -26,6 +28,7 @@ const AddToCart = () => {
   const [type, setType] = useState([]);
   const [newType, setNewType] = useState("");
   const [selectedType, setSelectedType] = useState(null);
+  const [itemImage, setItemImage] = useState(null); // State to store image
 
   const totalPrice = items
     .filter((item) => item.status === "Not yet bought")
@@ -58,6 +61,7 @@ const AddToCart = () => {
       itemPrice: parseFloat(itemPrice),
       status,
       type: selectedType,
+      image: itemImage, // Save the selected image
     };
 
     const updatedItems = [newItem, ...items];
@@ -65,6 +69,7 @@ const AddToCart = () => {
     setItemName("");
     setItemPrice("");
     setStatus("Not yet bought");
+    setItemImage(null); 
 
     try {
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedItems));
@@ -72,6 +77,14 @@ const AddToCart = () => {
     } catch (error) {
       console.error("Failed to add items: ", error);
     }
+  };
+
+  const chooseImage = () => {
+    launchImageLibrary({ mediaType: "photo" }, (response) => {
+      if (response.assets && response.assets.length > 0) {
+        setItemImage(response.assets[0].uri);
+      }
+    });
   };
 
   const addType = async () => {
@@ -124,50 +137,6 @@ const AddToCart = () => {
     }
   };
 
-  const deleteAllItems = async () => {
-    setItems([]);
-    try {
-      await AsyncStorage.removeItem(STORAGE_KEY);
-    } catch (error) {
-      console.error("Failed to delete all items: ", error);
-    }
-  };
-
-  const updateItem = async (id, newName, newPrice) => {
-    const updatedItems = items.map((item) => {
-      if (item.id === id) {
-        return {
-          ...item,
-          itemName: newName,
-          itemPrice: parseFloat(newPrice),
-        };
-      }
-      return item;
-    });
-
-    setItems(updatedItems);
-
-    try {
-      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedItems));
-    } catch (error) {
-      console.error("Failed to update item: ", error);
-    }
-  };
-
-  const updateType = async (oldType, newType) => {
-    const updatedTypes = type.map((t) => (t === oldType ? newType : t));
-    setType(updatedTypes);
-
-    try {
-      await AsyncStorage.setItem(
-        STORAGE_KEY_TYPE,
-        JSON.stringify(updatedTypes)
-      );
-    } catch (error) {
-      console.error("Failed to update type: ", error);
-    }
-  };
-
   const loadItems = async () => {
     try {
       const storedItems = await AsyncStorage.getItem(STORAGE_KEY);
@@ -183,36 +152,13 @@ const AddToCart = () => {
     }
   };
 
-  const statusChange = (id) => {
-    const updatedItems = items.map((item) => {
-      if (item.id === id) {
-        return {
-          ...item,
-          status: item.status === itemStatus[0] ? itemStatus[1] : itemStatus[0],
-        };
-      }
-      return item;
-    });
-
-    setItems(updatedItems);
-    try {
-      AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedItems));
-    } catch (error) {
-      console.error("Failed to update item status: ", error);
-    }
-  };
-
-  const filteredItem = items.filter((item) =>
-    item?.itemName?.toLowerCase().includes(searchItem.toLowerCase())
-  );
-
   useEffect(() => {
     loadItems();
   }, []);
 
   return (
     <View style={styles.container}>
-      {/* แสดง Search bar */}
+      {/* Display search bar */}
       {!isVisible && (
         <TextInput
           style={styles.input}
@@ -222,7 +168,7 @@ const AddToCart = () => {
         />
       )}
 
-      {/* ปุ่ม add item */}
+      {/* Add item and add type buttons */}
       <View style={styles.buttonContainer}>
         <TouchableOpacity onPress={toggleAddButton} style={[styles.addButton]}>
           <Text style={styles.buttonText}>
@@ -230,7 +176,6 @@ const AddToCart = () => {
           </Text>
         </TouchableOpacity>
 
-        {/* ปุ่ม add type */}
         {!isVisible && (
           <TouchableOpacity
             onPress={() => {
@@ -243,7 +188,7 @@ const AddToCart = () => {
         )}
       </View>
 
-      {/* แสดง Textinput add type หลังจากกด add type */}
+      {/* Show TextInput for adding type after clicking 'Add type' */}
       {isVisibleType && !isVisible && (
         <View>
           <TextInput
@@ -263,7 +208,7 @@ const AddToCart = () => {
         </View>
       )}
 
-      {/* แสดง Textinput add item หลังจากกด add item */}
+      {/* Show TextInput for adding item and image picker after clicking 'Add Item' */}
       {isVisible && (
         <View>
           <Text style={styles.header}>🛒 Add items To the Cart</Text>
@@ -309,7 +254,17 @@ const AddToCart = () => {
             />
           </View>
 
-          {/* ปุ่ม add item */}
+          {/* Image picker button */}
+          <TouchableOpacity onPress={chooseImage} style={styles.imageButton}>
+            <Text style={styles.buttonText}>📸 Choose Image</Text>
+          </TouchableOpacity>
+
+          {/* Display selected image */}
+          {itemImage && (
+            <Image source={{ uri: itemImage }} style={styles.imagePreview} />
+          )}
+
+          {/* Add Item Button */}
           <TouchableOpacity onPress={addItem} style={styles.addButton2}>
             <Text style={styles.buttonText}>➕ Add Item</Text>
           </TouchableOpacity>
@@ -317,7 +272,9 @@ const AddToCart = () => {
       )}
 
       <FlatList
-        data={filteredItem}
+        data={items.filter((item) =>
+          item?.itemName?.toLowerCase().includes(searchItem.toLowerCase())
+        )}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <ItemCard
@@ -325,18 +282,18 @@ const AddToCart = () => {
             price={item.itemPrice}
             status={item.status}
             types={item.type}
-            onPress={() => deleteItem(item.id)}
-            onChange={() => statusChange(item.id)}
-            onUpdate={(newName, newPrice) =>
-              updateItem(item.id, newName, newPrice)
+            image={item.image}
+            onUpdate={(itemName, itemPrice) =>
+              updateItem(item.id, itemName, itemPrice)
             }
-            onUpdateType={(oldType, newType) => updateType(oldType, newType)}
+            onUpdateType={(types) => updateType(item.id, types)}
+            onPress={() => deleteItem(item.id)}
           />
         )}
         style={styles.cardList}
       />
 
-      <TotalSummary price={totalPrice} onPress={deleteAllItems} />
+      <TotalSummary price={totalPrice} onPress={() => deleteAllItems()} />
     </View>
   );
 };
@@ -433,6 +390,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 10,
     marginHorizontal: 5,
+  },
+  imageButton: {
+    backgroundColor: "#28a745",
+    padding: 12,
+    borderRadius: 10,
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  imagePreview: {
+    width: 100,
+    height: 100,
+    marginBottom: 10,
+    borderRadius: 8,
+    marginTop: 10,
   },
 });
 

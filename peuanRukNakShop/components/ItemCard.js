@@ -7,12 +7,14 @@ import {
   StyleSheet,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { Image } from "react-native";
 
 const ItemCard = ({
   title: initialTitle,
   price: initialPrice,
   status,
   types: initialType,
+  image,
   onPress,
   onChange,
   onUpdate,
@@ -37,6 +39,14 @@ const ItemCard = ({
 
   return (
     <View style={[styles.card, { opacity: isPurchased ? 0.5 : 1 }]}>
+      {image && (
+        <Image
+          source={{
+            uri: image,
+          }}
+          style={styles.imageStyle}
+        />
+      )}
       <View style={{ flexDirection: "row" }}>
         <View style={{ flex: 1 }}>
           {isEditing ? (
@@ -205,6 +215,15 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginRight: 10,
     fontSize: 16,
+  },
+  imageStyle: {
+    flex: 1,
+    alignSelf: "center",
+    width: 150,
+    height: 150,
+    margin: 5,
+    borderWidth: 7,
+    borderColor: "#FFF",
   },
 });
 
