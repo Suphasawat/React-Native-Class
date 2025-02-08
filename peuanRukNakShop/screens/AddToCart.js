@@ -68,6 +68,7 @@ const AddToCart = () => {
 
     try {
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedItems));
+      await loadItems();
     } catch (error) {
       console.error("Failed to add items: ", error);
     }
@@ -117,6 +118,7 @@ const AddToCart = () => {
     setItems(updatedItems);
     try {
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedItems));
+      await loadItems();
     } catch (error) {
       console.error("Failed to delete item: ", error);
     }
@@ -128,6 +130,41 @@ const AddToCart = () => {
       await AsyncStorage.removeItem(STORAGE_KEY);
     } catch (error) {
       console.error("Failed to delete all items: ", error);
+    }
+  };
+
+  const updateItem = async (id, newName, newPrice) => {
+    const updatedItems = items.map((item) => {
+      if (item.id === id) {
+        return {
+          ...item,
+          itemName: newName,
+          itemPrice: parseFloat(newPrice),
+        };
+      }
+      return item;
+    });
+
+    setItems(updatedItems);
+
+    try {
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedItems));
+    } catch (error) {
+      console.error("Failed to update item: ", error);
+    }
+  };
+
+  const updateType = async (oldType, newType) => {
+    const updatedTypes = type.map((t) => (t === oldType ? newType : t));
+    setType(updatedTypes);
+
+    try {
+      await AsyncStorage.setItem(
+        STORAGE_KEY_TYPE,
+        JSON.stringify(updatedTypes)
+      );
+    } catch (error) {
+      console.error("Failed to update type: ", error);
     }
   };
 
@@ -290,6 +327,10 @@ const AddToCart = () => {
             types={item.type}
             onPress={() => deleteItem(item.id)}
             onChange={() => statusChange(item.id)}
+            onUpdate={(newName, newPrice) =>
+              updateItem(item.id, newName, newPrice)
+            }
+            onUpdateType={(oldType, newType) => updateType(oldType, newType)}
           />
         )}
         style={styles.cardList}
