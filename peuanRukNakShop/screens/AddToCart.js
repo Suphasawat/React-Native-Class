@@ -29,7 +29,7 @@ const AddToCart = () => {
   const [type, setType] = useState([]);
   const [newType, setNewType] = useState("");
   const [selectedType, setSelectedType] = useState(null);
-  const [itemImage, setItemImage] = useState(null); // State to store image
+  const [itemImage, setItemImage] = useState(null);
 
   const totalPrice = items
     .filter((item) => item.status === "Not yet bought")
@@ -62,7 +62,7 @@ const AddToCart = () => {
       itemPrice: parseFloat(itemPrice),
       status,
       type: selectedType,
-      image: itemImage, // Save the selected image
+      image: itemImage,
     };
 
     const updatedItems = [newItem, ...items];
@@ -80,8 +80,8 @@ const AddToCart = () => {
     }
   };
 
-  const chooseImage = () => {
-    launchImageLibrary({ mediaType: "photo" }, (response) => {
+  const chooseImage = async () => {
+    await launchImageLibrary({ mediaType: "photo" }, (response) => {
       if (response.assets && response.assets.length > 0) {
         setItemImage(response.assets[0].uri);
       }
@@ -271,17 +271,20 @@ const AddToCart = () => {
               />
             </View>
 
-            {/* Image picker button */}
-            <TouchableOpacity onPress={chooseImage} style={styles.imageButton}>
+            {/* เลือกรูป */}
+            <TouchableOpacity
+              onPress={() => chooseImage}
+              style={styles.imageButton}
+            >
               <Text style={styles.buttonText}>📸 Choose Image</Text>
             </TouchableOpacity>
 
-            {/* Display selected image */}
+            {/* แสดงรูป */}
             {itemImage && (
               <Image source={{ uri: itemImage }} style={styles.imagePreview} />
             )}
 
-            {/* Add Item Button */}
+            {/* ปุ่มเพิ่ม item*/}
             <TouchableOpacity onPress={addItem} style={styles.addButton2}>
               <Text style={styles.buttonText}>➕ Add Item</Text>
             </TouchableOpacity>
