@@ -166,7 +166,7 @@ const AddToCart = () => {
   };
 
   const filteredItem = items.filter((item) =>
-    item.itemName.toLowerCase().includes(searchItem.toLowerCase())
+    item?.itemName?.toLowerCase().includes(searchItem.toLowerCase())
   );
 
   useEffect(() => {
