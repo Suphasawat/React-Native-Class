@@ -7,6 +7,7 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  ScrollView,
 } from "react-native";
 import ItemCard from "../components/ItemCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -137,6 +138,16 @@ const AddToCart = () => {
     }
   };
 
+  const deleteAllItems = async () => {
+    setItems([]); // Clear the items array
+    try {
+      await AsyncStorage.removeItem(STORAGE_KEY);
+      await loadItems();
+    } catch (error) {
+      console.error("Failed to delete all items: ", error);
+    }
+  };
+
   const loadItems = async () => {
     try {
       const storedItems = await AsyncStorage.getItem(STORAGE_KEY);
@@ -157,145 +168,152 @@ const AddToCart = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      {/* Display search bar */}
-      {!isVisible && (
-        <TextInput
-          style={styles.input}
-          placeholder="Search Item Name"
-          value={searchItem}
-          onChangeText={setSearchItem}
-        />
-      )}
-
-      {/* Add item and add type buttons */}
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={toggleAddButton} style={[styles.addButton]}>
-          <Text style={styles.buttonText}>
-            ➕ {isVisible ? "Search items" : "Add Items"}
-          </Text>
-        </TouchableOpacity>
-
+    <ScrollView>
+      <View style={styles.container}>
+        {/* Display search bar */}
         {!isVisible && (
-          <TouchableOpacity
-            onPress={() => {
-              toggleAddTypeButton();
-            }}
-            style={styles.addTypeButton}
-          >
-            <Text style={styles.buttonText}>➕ Add type</Text>
-          </TouchableOpacity>
+          <TextInput
+            style={styles.input}
+            placeholder="Search Item Name"
+            value={searchItem}
+            onChangeText={setSearchItem}
+          />
         )}
-      </View>
 
-      {/* Show TextInput for adding type after clicking 'Add type' */}
-      {isVisibleType && !isVisible && (
-        <View>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter New Type"
-            value={newType}
-            onChangeText={setNewType}
-          />
+        {/* Add item and add type buttons */}
+        <View style={styles.buttonContainer}>
           <TouchableOpacity
-            onPress={() => {
-              addType();
-            }}
-            style={styles.addTypeButton2}
+            onPress={toggleAddButton}
+            style={[styles.addButton]}
           >
-            <Text style={styles.buttonText}>➕ Add type</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-
-      {/* Show TextInput for adding item and image picker after clicking 'Add Item' */}
-      {isVisible && (
-        <View>
-          <Text style={styles.header}>🛒 Add items To the Cart</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Item Name"
-            value={itemName}
-            onChangeText={setItemName}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Item Price"
-            value={itemPrice}
-            onChangeText={(text) => setItemPrice(text.replace(/[^0-9.]/g, ""))}
-            keyboardType="numeric"
-          />
-          <View style={styles.typeContainer}>
-            <FlatList
-              data={type}
-              keyExtractor={(item, index) => index.toString()}
-              horizontal
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={[
-                    styles.typeButton,
-                    selectedType === item && styles.selectedTypeButton,
-                  ]}
-                  onPress={() => setSelectedType(item)}
-                >
-                  <Text style={styles.typeText}>
-                    {item}
-                    <TouchableOpacity onPress={() => deleteType(item)}>
-                      <Icon
-                        name="close"
-                        size={20}
-                        color="red"
-                        style={{ marginLeft: 5 }}
-                      />
-                    </TouchableOpacity>
-                  </Text>
-                </TouchableOpacity>
-              )}
-            />
-          </View>
-
-          {/* Image picker button */}
-          <TouchableOpacity onPress={chooseImage} style={styles.imageButton}>
-            <Text style={styles.buttonText}>📸 Choose Image</Text>
+            <Text style={styles.buttonText}>
+              ➕ {isVisible ? "Search items" : "Add Items"}
+            </Text>
           </TouchableOpacity>
 
-          {/* Display selected image */}
-          {itemImage && (
-            <Image source={{ uri: itemImage }} style={styles.imagePreview} />
+          {!isVisible && (
+            <TouchableOpacity
+              onPress={() => {
+                toggleAddTypeButton();
+              }}
+              style={styles.addTypeButton}
+            >
+              <Text style={styles.buttonText}>➕ Add type</Text>
+            </TouchableOpacity>
           )}
-
-          {/* Add Item Button */}
-          <TouchableOpacity onPress={addItem} style={styles.addButton2}>
-            <Text style={styles.buttonText}>➕ Add Item</Text>
-          </TouchableOpacity>
         </View>
-      )}
 
-      <FlatList
-        data={items.filter((item) =>
-          item?.itemName?.toLowerCase().includes(searchItem.toLowerCase())
+        {/* Show TextInput for adding type after clicking 'Add type' */}
+        {isVisibleType && !isVisible && (
+          <View>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter New Type"
+              value={newType}
+              onChangeText={setNewType}
+            />
+            <TouchableOpacity
+              onPress={() => {
+                addType();
+              }}
+              style={styles.addTypeButton2}
+            >
+              <Text style={styles.buttonText}>➕ Add type</Text>
+            </TouchableOpacity>
+          </View>
         )}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <ItemCard
-            title={item.itemName}
-            price={item.itemPrice}
-            status={item.status}
-            types={item.type}
-            image={item.image}
-            onUpdateImage={(image) => updateItemImage(item.id, image)}
-            onUpdate={(itemName, itemPrice) =>
-              updateItem(item.id, itemName, itemPrice)
-            }
-            onUpdateType={(types) => updateType(item.id, types)}
-            onPress={() => deleteItem(item.id)}
-          />
-        )}
-        style={styles.cardList}
-      />
 
-      <TotalSummary price={totalPrice} onPress={() => deleteAllItems()} />
-    </View>
+        {/* Show TextInput for adding item and image picker after clicking 'Add Item' */}
+        {isVisible && (
+          <View>
+            <Text style={styles.header}>🛒 Add items To the Cart</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Item Name"
+              value={itemName}
+              onChangeText={setItemName}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Item Price"
+              value={itemPrice}
+              onChangeText={(text) =>
+                setItemPrice(text.replace(/[^0-9.]/g, ""))
+              }
+              keyboardType="numeric"
+            />
+            <View style={styles.typeContainer}>
+              <FlatList
+                data={type}
+                keyExtractor={(item, index) => index.toString()}
+                horizontal
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={[
+                      styles.typeButton,
+                      selectedType === item && styles.selectedTypeButton,
+                    ]}
+                    onPress={() => setSelectedType(item)}
+                  >
+                    <Text style={styles.typeText}>
+                      {item}
+                      <TouchableOpacity onPress={() => deleteType(item)}>
+                        <Icon
+                          name="close"
+                          size={20}
+                          color="red"
+                          style={{ marginLeft: 5 }}
+                        />
+                      </TouchableOpacity>
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              />
+            </View>
+
+            {/* Image picker button */}
+            <TouchableOpacity onPress={chooseImage} style={styles.imageButton}>
+              <Text style={styles.buttonText}>📸 Choose Image</Text>
+            </TouchableOpacity>
+
+            {/* Display selected image */}
+            {itemImage && (
+              <Image source={{ uri: itemImage }} style={styles.imagePreview} />
+            )}
+
+            {/* Add Item Button */}
+            <TouchableOpacity onPress={addItem} style={styles.addButton2}>
+              <Text style={styles.buttonText}>➕ Add Item</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
+        <FlatList
+          data={items.filter((item) =>
+            item?.itemName?.toLowerCase().includes(searchItem.toLowerCase())
+          )}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <ItemCard
+              title={item.itemName}
+              price={item.itemPrice}
+              status={item.status}
+              types={item.type}
+              image={item.image}
+              onUpdateImage={(image) => updateItemImage(item.id, image)}
+              onUpdate={(itemName, itemPrice) =>
+                updateItem(item.id, itemName, itemPrice)
+              }
+              onUpdateType={(types) => updateType(item.id, types)}
+              onPress={() => deleteItem(item.id)}
+            />
+          )}
+          style={styles.cardList}
+        />
+
+        <TotalSummary price={totalPrice} onPress={() => deleteAllItems()} />
+      </View>
+    </ScrollView>
   );
 };
 
@@ -304,6 +322,7 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: "#f0f4f8",
     flex: 1,
+    paddingBottom: 80,
   },
   header: {
     fontSize: 26,
