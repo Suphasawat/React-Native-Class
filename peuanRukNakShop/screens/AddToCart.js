@@ -280,10 +280,7 @@ const AddToCart = () => {
             </View>
 
             {/* เลือกรูป */}
-            <TouchableOpacity
-              onPress={() => chooseImage}
-              style={styles.imageButton}
-            >
+            <TouchableOpacity onPress={chooseImage} style={styles.imageButton}>
               <Text style={styles.buttonText}>📸 Choose Image</Text>
             </TouchableOpacity>
 
