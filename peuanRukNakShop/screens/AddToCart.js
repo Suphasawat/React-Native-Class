@@ -460,3 +460,54 @@ const styles = StyleSheet.create({
 });
 
 export default AddToCart;
+
+// const [selectedSearchType, setSelectedSearchType] = useState(null);
+
+// // ฟังก์ชันสำหรับรีเซ็ตประเภทที่เลือกค้นหา
+// const resetSearchType = () => {
+//   setSelectedSearchType(null);
+// };
+
+// // UI สำหรับเลือกประเภทสินค้าในการค้นหา
+// <View style={styles.typeContainer}>
+//   <FlatList
+//     data={type}
+//     keyExtractor={(item, index) => index.toString()}
+//     horizontal
+//     renderItem={({ item }) => (
+//       <TouchableOpacity
+//         style={[
+//           styles.typeButton,
+//           selectedSearchType === item && styles.selectedTypeButton,
+//         ]}
+//         onPress={() => setSelectedSearchType(item)}
+//       >
+//         <Text style={styles.typeText}>{item}</Text>
+//       </TouchableOpacity>
+//     )}
+//   />
+//   <TouchableOpacity onPress={resetSearchType} style={styles.resetButton}>
+//     <Text style={styles.buttonText}>Reset</Text>
+//   </TouchableOpacity>
+// </View>;
+
+// // ปรับปรุง FlatList ให้กรองตามประเภทที่เลือก
+// <FlatList
+//   data={items.filter(
+//     (item) =>
+//       item.itemName.toLowerCase().includes(searchItem.toLowerCase()) &&
+//       (!selectedSearchType || item.type === selectedSearchType)
+//   )}
+//   keyExtractor={(item) => item.id}
+//   renderItem={({ item }) => (
+//     <ItemCard
+//       title={item.itemName}
+//       price={item.itemPrice}
+//       status={item.status}
+//       types={item.type}
+//       image={item.image}
+//       onPress={() => deleteItem(item.id)}
+//     />
+//   )}
+//   style={styles.cardList}
+// />;
