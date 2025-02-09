@@ -13,7 +13,7 @@ import ItemCard from "../components/ItemCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import TotalSummary from "../components/TotalSummary";
 import Icon from "react-native-vector-icons/AntDesign";
-import { launchImageLibrary } from "react-native-image-picker";
+import * as ImagePicker from "expo-image-picker";
 
 const STORAGE_KEY = "@card_data";
 const STORAGE_KEY_TYPE = "@type_data";
@@ -81,18 +81,23 @@ const AddToCart = () => {
   };
 
   const chooseImage = async () => {
-    if (!itemName.trim() || isNaN(itemPrice) || parseFloat(itemPrice) <= 0) {
-      alert("Please enter a valid title and price above 0");
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      alert("Sorry, we need gallery permissions to make this work!");
       return;
     }
-    try {
-      await launchImageLibrary({ mediaType: "photo" }, (response) => {
-        if (response.assets && response.assets.length > 0) {
-          setItemImage(response.assets[0].uri);
-        }
-      });
-    } catch (error) {
-      console.error("Failed to choose image: ", error);
+
+    // เปิดแกลเลอรีให้ผู้ใช้เลือกภาพ
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    // ตรวจสอบว่าผู้ใช้ได้เลือกรูปภาพจริงๆ หรือกดปิดไป
+    if (!result.canceled) {
+      setItemImage(result.assets[0].uri);
     }
   };
 
