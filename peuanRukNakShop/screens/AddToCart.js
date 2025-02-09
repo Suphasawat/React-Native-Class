@@ -56,6 +56,11 @@ const AddToCart = () => {
       return;
     }
 
+    if (!itemImage) {
+      alert("Please select an image before adding an item.");
+      return;
+    }
+
     const newItem = {
       id: Date.now().toString(),
       itemName,
@@ -87,7 +92,6 @@ const AddToCart = () => {
       return;
     }
 
-    // เปิดแกลเลอรีให้ผู้ใช้เลือกภาพ
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -95,7 +99,6 @@ const AddToCart = () => {
       quality: 1,
     });
 
-    // ตรวจสอบว่าผู้ใช้ได้เลือกรูปภาพจริงๆ หรือกดปิดไป
     if (!result.canceled) {
       setItemImage(result.assets[0].uri);
     }
