@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
   placeholder: {
     flex: 1,
     marginLeft: 10,
+    fontSize: 16,
   },
   icon: {
     color: "#A27B5C",

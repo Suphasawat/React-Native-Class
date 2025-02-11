@@ -1,10 +1,17 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
 const RecipeCard = ({ recipes }) => {
+  const navigation = useNavigation();
   return (
-    <TouchableOpacity style={styles.Card}>
+    <TouchableOpacity
+      style={styles.Card}
+      onPress={() =>
+        navigation.navigate("RecipeDetail", { recipeId: recipes.idMeal })
+      }
+    >
       <Image style={styles.image} source={{ uri: recipes.strMealThumb }} />
       <View style={styles.textContainer}>
         <Text style={styles.title}>{recipes.strMeal}</Text>
@@ -21,7 +28,9 @@ const styles = StyleSheet.create({
   Card: {
     flexDirection: "row",
     backgroundColor: "white",
-    borderRadius: 12,
+    borderRadius: 24,
+    borderColor: "#3F4F44",
+    borderWidth: 2,
     marginHorizontal: 10,
     marginVertical: 6,
     padding: 10,
@@ -34,7 +43,9 @@ const styles = StyleSheet.create({
   image: {
     width: 80,
     height: 80,
-    borderRadius: 10,
+    borderRadius: 20,
+    borderColor: "#3F4F44",
+    borderWidth: 2,
   },
   textContainer: {
     flex: 1,

@@ -2,14 +2,28 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "./src/screens/HomeScreen";
+import RecipeDetail from "./src/screens/RecipeDetailScreen";
 
 const Stack = createStackNavigator();
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Navigator
+        initialRouteName="Home"
+        screenOptions={{
+          headerStyle: { backgroundColor: "#2C3930" },
+          headerTintColor: "#fff",
+          headerTitleAlign: "center",
+          headerTitleStyle: { fontSize: 24, fontWeight: "bold" },
+        }}
+      >
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ title: "Gin Laew Dead 💀" }}
+        />
+        <Stack.Screen name="RecipeDetail" component={RecipeDetail} />
       </Stack.Navigator>
     </NavigationContainer>
   );
