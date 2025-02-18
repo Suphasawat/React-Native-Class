@@ -9,7 +9,7 @@ const RecipeCard = ({ recipes }) => {
     <TouchableOpacity
       style={styles.Card}
       onPress={() =>
-        navigation.navigate("RecipeDetail", { recipeId: recipes.idMeal })
+        navigation.navigate("RecipeDetailScreen", { recipeId: recipes.idMeal })
       }
     >
       <Image style={styles.image} source={{ uri: recipes.strMealThumb }} />

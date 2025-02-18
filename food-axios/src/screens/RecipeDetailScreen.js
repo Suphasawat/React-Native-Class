@@ -1,10 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, ScrollView, StyleSheet, Image } from "react-native";
+import {
+  Text,
+  View,
+  ScrollView,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import axios from "axios";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const RecipeDetailScreen = ({ route }) => {
   const { recipeId } = route.params;
   const [recipeDetail, setRecipeDetail] = useState(null);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const fetchRecipeDetail = async () => {
     try {
@@ -17,11 +27,41 @@ const RecipeDetailScreen = ({ route }) => {
     }
   };
 
+  const checkFavoriteStatus = async () => {
+    try {
+      const storedFavorites = await AsyncStorage.getItem("favorites");
+      const favorites = storedFavorites ? JSON.parse(storedFavorites) : [];
+      const exist = favorites.some((id) => id === recipeId);
+      setIsFavorite(exist);
+    } catch (error) {
+      console.log("Error checking favorites:", error);
+    }
+  };
+
   useEffect(() => {
     if (recipeId) {
       fetchRecipeDetail();
+      checkFavoriteStatus();
     }
   }, [recipeId]);
+
+  const toggleFavorite = async () => {
+    try {
+      const storedFavorites = await AsyncStorage.getItem("favorites");
+      let favorites = storedFavorites ? JSON.parse(storedFavorites) : [];
+
+      if (isFavorite) {
+        favorites = favorites.filter((id) => id !== recipeId);
+      } else {
+        favorites.push(recipeId);
+      }
+
+      await AsyncStorage.setItem("favorites", JSON.stringify(favorites));
+      setIsFavorite(!isFavorite);
+    } catch (error) {
+      console.log("Error Saving favorites: ", error);
+    }
+  };
 
   if (!recipeDetail) {
     return (
@@ -34,6 +74,13 @@ const RecipeDetailScreen = ({ route }) => {
   return (
     <ScrollView style={styles.container}>
       <Image style={styles.image} source={{ uri: recipeDetail.strMealThumb }} />
+      <TouchableOpacity style={styles.favoriteButton} onPress={toggleFavorite}>
+        <MaterialIcons
+          name={isFavorite ? "favorite" : "favorite-border"}
+          size={28}
+          color={isFavorite ? "#ff6f61" : "black"}
+        />
+      </TouchableOpacity>
       <Text style={styles.title}>{recipeDetail.strMeal}</Text>
       <Text style={styles.category}>{recipeDetail.strCategory}</Text>
       <Text style={styles.instructionsTitle}>Instructions:</Text>
@@ -45,17 +92,25 @@ const RecipeDetailScreen = ({ route }) => {
           .filter((key) => key.includes("strIngredient") && recipeDetail[key])
           .map((key, index) => {
             const ingredient = recipeDetail[key];
-            const imageUrl = `https://www.themealdb.com/images/ingredients/${ingredient}.png`;
+            const measureKey = key.replace("strIngredient", "strMeasure");
+            const measure = recipeDetail[measureKey];
 
-            return (
-              <View key={index} style={styles.ingredientContainer}>
-                <Image
-                  style={styles.ingredientImage}
-                  source={{ uri: imageUrl }}
-                />
-                <Text style={styles.ingredient}>{ingredient}</Text>
-              </View>
-            );
+            if (ingredient && measure) {
+              const imageUrl = `https://www.themealdb.com/images/ingredients/${ingredient}.png`;
+
+              return (
+                <View key={index} style={styles.ingredientContainer}>
+                  <Image
+                    style={styles.ingredientImage}
+                    source={{ uri: imageUrl }}
+                  />
+                  <Text style={styles.ingredient}>
+                    {measure} {ingredient}
+                  </Text>
+                </View>
+              );
+            }
+            return null;
           })}
       </View>
     </ScrollView>
@@ -107,7 +162,16 @@ const styles = StyleSheet.create({
   ingredientContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10,
+    backgroundColor: "white",
+    borderRadius: 24,
+    marginHorizontal: 10,
+    marginVertical: 6,
+    padding: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
   },
   ingredientImage: {
     width: 80,
@@ -118,6 +182,15 @@ const styles = StyleSheet.create({
   ingredient: {
     fontSize: 16,
     color: "#555",
+  },
+  favoriteButton: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    zIndex: 1,
+    backgroundColor: "#fff",
+    borderRadius: 50,
+    padding: 8,
   },
 });
 

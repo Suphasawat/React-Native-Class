@@ -3,6 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "./src/screens/HomeScreen";
 import RecipeDetail from "./src/screens/RecipeDetailScreen";
+import FavoriteScreen from "./src/screens/FavoriteScreen";
 
 const Stack = createStackNavigator();
 
@@ -24,6 +25,7 @@ const App = () => {
           options={{ title: "Gin Laew Dead 💀" }}
         />
         <Stack.Screen name="RecipeDetail" component={RecipeDetail} />
+        <Stack.Screen name="Favorite" component={FavoriteScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
