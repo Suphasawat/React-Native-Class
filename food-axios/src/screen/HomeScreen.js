@@ -43,20 +43,6 @@ const HomeScreen = ({ navigation }) => {
     }
   };
 
-  const toggleFavorite = async (recipe) => {
-    let updatedFavorites;
-    if (favorite.some((item) => item.idMeal === recipe.idMeal)) {
-      updatedFavorites = favorite.filter(
-        (item) => item.idMeal !== recipe.idMeal
-      );
-    } else {
-      updatedFavorites = [...favorite, recipe];
-    }
-    await AsyncStorage.setItem("favorites", JSON.stringify(updatedFavorites));
-    setFavorite(updatedFavorites);
-    console.log("Updated favorites:", updatedFavorites);
-  };
-
   return (
     <View style={styles.container}>
       <SearchBox
@@ -76,22 +62,7 @@ const HomeScreen = ({ navigation }) => {
             onPress={() =>
               navigation.navigate("RecipeDetail", { recipe: item })
             }
-          >
-            <TouchableOpacity
-              onPress={() => toggleFavorite(item)}
-              style={styles.favoriteButton}
-            >
-              <MaterialIcons
-                name={
-                  favorite.some((fav) => fav.idMeal === item.idMeal)
-                    ? "favorite"
-                    : "favorite-border"
-                }
-                size={24}
-                color="#ff6f61"
-              />
-            </TouchableOpacity>
-          </RecipeCard>
+          />
         )}
         contentContainerStyle={styles.listContainer}
       />
