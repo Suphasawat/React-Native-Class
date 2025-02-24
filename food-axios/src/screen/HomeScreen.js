@@ -7,8 +7,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import axios from "axios";
-import SearchBox from "../../compo/SearchBox";
-import RecipeCard from "../../compo/RecipeCard";
+import SearchBox from "../components/SearchBox";
+import RecipeCard from "../components/RecipeCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
@@ -35,7 +35,7 @@ const HomeScreen = ({ navigation }) => {
 
   const fetchFavorites = async () => {
     try {
-      const storedFavorites = await AsyncStorage.getItem("RecipeDetali");
+      const storedFavorites = await AsyncStorage.getItem("RecipeDetail");
       const favoriteList = storedFavorites ? JSON.parse(storedFavorites) : [];
       setFavorite(favoriteList);
     } catch (error) {
@@ -52,7 +52,7 @@ const HomeScreen = ({ navigation }) => {
     } else {
       updatedFavorites = [...favorite, recipe];
     }
-    await AsyncStorage.setItem("favorite", JSON.stringify(updatedFavorites));
+    await AsyncStorage.setItem("favorites", JSON.stringify(updatedFavorites));
     setFavorite(updatedFavorites);
     console.log("Updated favorites:", updatedFavorites);
   };
@@ -60,7 +60,7 @@ const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <SearchBox
-        placeholder="Find recipes..."
+        placeholder="Search recipes..."
         value={search}
         onChangeText={setSearch}
       />
@@ -74,7 +74,7 @@ const HomeScreen = ({ navigation }) => {
           <RecipeCard
             item={item}
             onPress={() =>
-              navigation.navigate("RecipeDetali", { recipe: item })
+              navigation.navigate("RecipeDetail", { recipe: item })
             }
           >
             <TouchableOpacity
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F8F8FF",
-    paddingHorizontal: 15,
+    paddingHorizontal: 20,
     paddingTop: 20,
   },
   favoriteButton: {
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   },
   favoriteScreenButton: {
     padding: 10,
-    backgroundColor: "#ff6f61",
+    backgroundColor: "#2C3639",
     borderRadius: 5,
     alignItems: "center",
     flexDirection: "row-reverse",

@@ -2,7 +2,7 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "./src/screen/HomeScreen";
-import RecipeDetalliScreen from "./src/screen/RecipeDetaliScreen";
+import RecipeDetailScreen from "./src/screen/RecipeDetailScreen";
 import FavoritesScreen from "./src/screen/FavoritesScreen";
 
 const Stack = createStackNavigator();
@@ -13,7 +13,7 @@ const App = () => {
       <Stack.Navigator
         initialRouteName="Home"
         screenOptions={{
-          headerStyle: { backgroundColor: "#ff6f61" },
+          headerStyle: { backgroundColor: "#2C3930" },
           headerTintColor: "#fff",
           headerTitleAlign: "center",
           headerTitleStyle: { fontSize: 24, fontWeight: "bold" },
@@ -23,15 +23,15 @@ const App = () => {
           name="Home"
           component={HomeScreen}
           options={{
-            title: "Gin Laew Tie 🍽️",
+            title: "Gin Laew Dead 💀",
           }}
         />
-        <Stack.Screen name="RecipeDetali" component={RecipeDetalliScreen} />
+        <Stack.Screen name="RecipeDetail" component={RecipeDetailScreen} />
         <Stack.Screen
           name="favorite"
           component={FavoritesScreen}
           options={{
-            title:"❤️ Favorites ❤️"
+            title: "Favorites 💖",
           }}
         />
       </Stack.Navigator>

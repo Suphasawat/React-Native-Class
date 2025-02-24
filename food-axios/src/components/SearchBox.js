@@ -5,7 +5,7 @@ import Feather from "@expo/vector-icons/Feather";
 const SearchBox = ({ placeholder, value, onChangeText }) => {
   return (
     <View style={styles.container}>
-      <Feather name="search" size={20} color="#888" />
+      <Feather name="search" size={20} color="#A27B5C" />
       <TextInput
         style={styles.input}
         placeholder={placeholder}
@@ -24,7 +24,9 @@ const styles = StyleSheet.create({
     width: "90%",
     alignSelf: "center",
     backgroundColor: "#fff",
-    borderRadius: 10,
+    borderColor: "#3F4E4F",
+    borderWidth: 2,
+    borderRadius: 25,
     paddingHorizontal: 15,
     paddingVertical: 10,
     shadowColor: "#000",
@@ -32,10 +34,10 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 3,
     marginVertical: 10,
-    gap: 10, // เพิ่มช่องว่างระหว่างไอคอนกับ TextInput
+    gap: 10,
   },
   input: {
-    flex: 1, // ให้ TextInput ขยายเต็มพื้นที่ที่เหลือ
+    flex: 1,
     fontSize: 16,
     color: "#333",
     paddingVertical: 5,

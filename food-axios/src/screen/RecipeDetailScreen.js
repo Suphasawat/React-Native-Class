@@ -4,7 +4,7 @@ import { FlatList } from "react-native-gesture-handler";
 import { MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const RecipeDetalliScreen = ({ route }) => {
+const RecipeDetailScreen = ({ route }) => {
   const { recipe } = route.params;
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -25,7 +25,7 @@ const RecipeDetalliScreen = ({ route }) => {
 
   const renderIngredients = ({ item }) => (
     <View style={styles.ingredientItem}>
-      <MaterialIcons name="check-circle" size={18} color="#ff6f61" />
+      <MaterialIcons name="check-circle" size={18} color="#3F4E4F" />
       <Text style={styles.ingredientText}>{item}</Text>
     </View>
   );
@@ -45,18 +45,15 @@ const RecipeDetalliScreen = ({ route }) => {
       const storedFavorites = await AsyncStorage.getItem("favorites");
       let favorite = storedFavorites ? JSON.parse(storedFavorites) : [];
       if (isFavorite) {
-        // Remove
         favorite = favorite.filter((fav) => fav.idMeal != recipe.idMeal);
       } else {
-        // Add
         favorite.push(recipe);
       }
-      await AsyncStorage.setItem("favorite", JSON.stringify(favorite));
+      await AsyncStorage.setItem("favorites", JSON.stringify(favorite));
       setIsFavorite(!isFavorite);
     } catch (error) {
-      console.error("Error Loading Favporite", error);
+      console.error("Error Loading Favorite", error);
     }
-    // setIsFavorite(!isFavorite);
   };
 
   return (
@@ -84,13 +81,13 @@ const RecipeDetalliScreen = ({ route }) => {
             <Text style={styles.category}>
               {recipe.strCategory} | {recipe.strArea} Cusine
             </Text>
-            <Text style={styles.sectionTitle}>Ingredients :: </Text>
+            <Text style={styles.sectionTitle}>Ingredients </Text>
           </View>
         </>
       }
       ListFooterComponent={
-        <View>
-          <Text style={styles.sectionTitle}>Ingredients :: </Text>
+        <View style={styles.content}>
+          <Text style={styles.sectionTitle}>Instructions </Text>
           <Text style={styles.instructions}>{recipe.strInstructions}</Text>
         </View>
       }
@@ -139,7 +136,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginTop: 15,
-    color: "#ff6f61",
+    color: "#A27B5C",
   },
   ingredientItem: {
     flexDirection: "row",
@@ -159,4 +156,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RecipeDetalliScreen;
+export default RecipeDetailScreen;

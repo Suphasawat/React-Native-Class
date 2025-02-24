@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import RecipeCard from "../../compo/RecipeCard";
+import RecipeCard from "../components/RecipeCard";
 
 const FavoritesScreen = ({ navigation }) => {
   const [favorites, setFavorites] = useState([]);

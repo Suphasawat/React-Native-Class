@@ -6,13 +6,18 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const RecipeCard = ({ item, onPress }) => {
   const [isFavorite, setFavorite] = useState(false);
 
-  useEffect(() => {
-    const checkIfFavorite = async () => {
+  const checkIfFavorite = async () => {
+    try {
       const storedFavorites = await AsyncStorage.getItem("favorites");
       const favoriteList = storedFavorites ? JSON.parse(storedFavorites) : [];
       const isFavorite = favoriteList.some((fav) => fav.idMeal === item.idMeal);
       setFavorite(isFavorite);
-    };
+    } catch (error) {
+      console.error("Error Loading Favorite", error);
+    }
+  };
+
+  useEffect(() => {
     checkIfFavorite();
   }, [item.idMeal]);
 
@@ -21,10 +26,8 @@ const RecipeCard = ({ item, onPress }) => {
       const storedFavorites = await AsyncStorage.getItem("favorites");
       let favorite = storedFavorites ? JSON.parse(storedFavorites) : [];
       if (isFavorite) {
-        // ลบรายการโปรด
         favorite = favorite.filter((fav) => fav.idMeal !== item.idMeal);
       } else {
-        // เพิ่มรายการโปรด
         favorite.push(item);
       }
       await AsyncStorage.setItem("favorites", JSON.stringify(favorite));
@@ -36,7 +39,9 @@ const RecipeCard = ({ item, onPress }) => {
 
   return (
     <TouchableOpacity style={styles.recipeItem} onPress={onPress}>
-      <Image style={styles.image} source={{ uri: item.strMealThumb }} />
+      {item.strMealThumb && (
+        <Image style={styles.image} source={{ uri: item.strMealThumb }} />
+      )}
       <View style={styles.textContainer}>
         <Text style={styles.title}>{item.strMeal}</Text>
         <View style={styles.footer}>
@@ -59,12 +64,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     padding: 15,
     marginVertical: 12,
-    borderRadius: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.2,
-    shadowRadius: 15,
-    elevation: 10,
+    borderRadius: 35,
+    borderColor: "#3F4E4F",
+    borderWidth: 2,
     alignItems: "center",
     alignSelf: "stretch",
     flexDirection: "row",
@@ -72,7 +74,9 @@ const styles = StyleSheet.create({
   image: {
     width: 80,
     height: 80,
-    borderRadius: 10,
+    borderRadius: 25,
+    borderColor: "#A27B5C",
+    borderWidth: 2,
   },
   textContainer: {
     flex: 1,
