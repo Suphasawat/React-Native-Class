@@ -15,12 +15,12 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 const HomeScreen = ({ navigation }) => {
   const [search, setSearch] = useState("");
   const [recipes, setRecipes] = useState([]);
-  const [favorite, setFavorite] = useState([]);
+  const [refreshFavorites, setRefreshFavorites] = useState(false);
 
   useEffect(() => {
     fetchRecipes();
     fetchFavorites();
-  }, []);
+  }, [refreshFavorites]);
 
   const fetchRecipes = async () => {
     try {
@@ -35,9 +35,9 @@ const HomeScreen = ({ navigation }) => {
 
   const fetchFavorites = async () => {
     try {
-      const storedFavorites = await AsyncStorage.getItem("RecipeDetail");
+      const storedFavorites = await AsyncStorage.getItem("favorites");
       const favoriteList = storedFavorites ? JSON.parse(storedFavorites) : [];
-      setFavorite(favoriteList);
+      setRefreshFavorites((prev) => !prev);
     } catch (error) {
       console.error("Error fetching favorites:", error);
     }
@@ -62,6 +62,7 @@ const HomeScreen = ({ navigation }) => {
             onPress={() =>
               navigation.navigate("RecipeDetail", { recipe: item })
             }
+            refreshFavorites={refreshFavorites}
           />
         )}
         contentContainerStyle={styles.listContainer}
@@ -72,7 +73,7 @@ const HomeScreen = ({ navigation }) => {
         style={styles.favoriteScreenButton}
       >
         <MaterialIcons
-          name="favorite-border"
+          name="favorite"
           size={24}
           color="#fff"
           style={styles.favoriteIcon}

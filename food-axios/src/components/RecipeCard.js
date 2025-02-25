@@ -3,23 +3,24 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const RecipeCard = ({ item, onPress }) => {
+const RecipeCard = ({ item, onPress, refreshFavorites }) => {
   const [isFavorite, setFavorite] = useState(false);
 
   const checkIfFavorite = async () => {
     try {
       const storedFavorites = await AsyncStorage.getItem("favorites");
       const favoriteList = storedFavorites ? JSON.parse(storedFavorites) : [];
-      const isFavorite = favoriteList.some((fav) => fav.idMeal === item.idMeal);
-      setFavorite(isFavorite);
+      const exists = favoriteList.some((fav) => fav.idMeal === item.idMeal);
+      setFavorite(exists);
     } catch (error) {
       console.error("Error Loading Favorite", error);
     }
   };
 
+  // re-check 
   useEffect(() => {
     checkIfFavorite();
-  }, [item.idMeal]);
+  }, [item.idMeal, refreshFavorites]);
 
   const toggleFavorite = async () => {
     try {

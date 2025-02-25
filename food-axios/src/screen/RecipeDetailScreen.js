@@ -19,7 +19,7 @@ const RecipeDetailScreen = ({ route }) => {
       const exists = favorite.some((fav) => fav.idMeal === recipe.idMeal);
       setIsFavorite(exists);
     } catch (error) {
-      console.error("Error Loading Favporite", error);
+      console.error("Error Loading Favorite", error);
     }
   };
 
@@ -34,7 +34,6 @@ const RecipeDetailScreen = ({ route }) => {
   for (let i = 1; i <= 20; i++) {
     const ingredient = recipe[`strIngredient${i}`];
     const measure = recipe[`strMeasure${i}`];
-
     if (ingredient) {
       ingredients.push(`${measure} ${ingredient}`);
     }
@@ -45,7 +44,7 @@ const RecipeDetailScreen = ({ route }) => {
       const storedFavorites = await AsyncStorage.getItem("favorites");
       let favorite = storedFavorites ? JSON.parse(storedFavorites) : [];
       if (isFavorite) {
-        favorite = favorite.filter((fav) => fav.idMeal != recipe.idMeal);
+        favorite = favorite.filter((fav) => fav.idMeal !== recipe.idMeal);
       } else {
         favorite.push(recipe);
       }
