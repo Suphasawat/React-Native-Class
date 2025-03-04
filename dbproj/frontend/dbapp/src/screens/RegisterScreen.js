@@ -11,6 +11,7 @@ const RegisterScreen = ({ navigation }) => {
   const handleRegister = () => {
     try {
       registerUser(username, password);
+      Alert.alert("Login Successful");
     } catch (error) {
       Alert.alert("Error", error.message);
     }
