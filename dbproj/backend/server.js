@@ -1,6 +1,6 @@
 const express = require("express");
 const sqlite3 = require("sqlite3").verbose();
-const bryptjs = require("bcryptjs");
+const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const app = express();
@@ -14,12 +14,16 @@ const db = new sqlite3.Database("./dbproj.db", (err) => {
 });
 
 db.run(
-  "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT, email TEXT, role TEXT)"
+  `CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT UNIQUE ,
+  password TEXT
+  )`
 );
 
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
-  const encryptedPassword = await bcrypt.hash(password, 10);
+  const encryptedPassword = await bcryptjs.hash(password, 8);
   console.log("POST: ", username, password);
 
   db.run(

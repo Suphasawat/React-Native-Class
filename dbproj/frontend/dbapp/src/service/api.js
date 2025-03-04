@@ -8,7 +8,7 @@ export const registerUser = async (username, password) => {
       username,
       password,
     });
-    return response.data
+    return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.message || "Error register user");
   }

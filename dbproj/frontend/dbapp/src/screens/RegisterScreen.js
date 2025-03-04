@@ -8,9 +8,9 @@ const RegisterScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     try {
-      registerUser(username, password);
+      await registerUser(username, password);
       Alert.alert("Login Successful");
     } catch (error) {
       Alert.alert("Error", error.message);
