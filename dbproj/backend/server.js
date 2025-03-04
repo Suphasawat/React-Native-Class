@@ -4,6 +4,7 @@ const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const app = express();
+const port = 5000;
 app.use(express.json());
 
 const db = new sqlite3.Database("./dbproj.db", (err) => {
@@ -34,4 +35,8 @@ app.post("/register", async (req, res) => {
       res.send({ message: "User registered" });
     }
   );
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
